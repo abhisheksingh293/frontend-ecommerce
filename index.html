@@ -7,9 +7,64 @@
     <link rel="stylesheet" href="styles/main.css">
 </head>
 <body>
-    <header>
-        <h1>Welcome to Our Online Store</h1>
+    <header class="main-header">
+        <div class="logo">
+            <img src="assets/logo.png" alt="Brand Logo" />
+        </div>
+        <nav class="nav-menu">
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Products</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+        <form class="search-bar">
+            <input type="text" placeholder="Search products..." aria-label="Search products" />
+            <button type="submit">🔍</button>
+        </form>
+        <div class="cart-section">
+            <a href="#" class="cart-icon" aria-label="Shopping Cart">
+                🛒
+                <span class="cart-badge">0</span>
+            </a>
+        </div>
+        <button class="hamburger" aria-label="Open menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
     </header>
+    <section class="hero-section">
+      <div class="hero-content">
+        <h1 class="hero-title">Biggest Sale of the Year!</h1>
+        <p class="hero-subtitle">Up to 70% off on selected products. Shop the latest arrivals and exclusive deals now.</p>
+        <a href="#" class="hero-cta">Shop Now</a>
+      </div>
+    </section>
+    <section class="products-section" id="products">
+      <h2 class="products-title">Featured Products</h2>
+      <div class="products-grid">
+        <div class="product-card">
+          <img src="assets/product1.jpg" alt="Product 1" class="product-image" />
+          <h3 class="product-name">Smart Headphones</h3>
+          <p class="product-price">₹2,999</p>
+          <button class="product-btn">Add to Cart</button>
+        </div>
+        <div class="product-card">
+          <img src="assets/product2.jpg" alt="Product 2" class="product-image" />
+          <h3 class="product-name">Wireless Speaker</h3>
+          <p class="product-price">₹1,499</p>
+          <button class="product-btn">Add to Cart</button>
+        </div>
+        <div class="product-card">
+          <img src="assets/product3.jpg" alt="Product 3" class="product-image" />
+          <h3 class="product-name">Fitness Tracker</h3>
+          <p class="product-price">₹999</p>
+          <button class="product-btn">Add to Cart</button>
+        </div>
+      </div>
+    </section>
     <script src="scripts/app.js"></script>
 </body>
 </html>

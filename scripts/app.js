@@ -28,13 +28,22 @@ function updateCartBadge() {
   cartBadge.textContent = qty;
 }
 function openCartModal() {
+  if (!cartModal || !cartModalOverlay) return;
   cartModal.style.display = 'block';
+  cartModal.classList.remove('slide-in'); // Reset in case
   cartModalOverlay.style.display = 'block';
   document.body.style.overflow = 'hidden';
   renderCart();
+  requestAnimationFrame(() => {
+    cartModal.classList.add('slide-in');
+  });
 }
 function closeCartModal() {
-  cartModal.style.display = 'none';
+  if (!cartModal || !cartModalOverlay) return;
+  cartModal.classList.remove('slide-in');
+  setTimeout(() => {
+    cartModal.style.display = 'none';
+  }, 320); // match CSS transition
   cartModalOverlay.style.display = 'none';
   document.body.style.overflow = '';
 }
@@ -54,10 +63,17 @@ function renderCart() {
   items.forEach(item => {
     total += item.price * item.qty;
     const li = document.createElement('li');
+    const cartKey = Object.keys(cart).find(key => cart[key] === item);
     li.innerHTML = `
-      <span class="cart-item-name">${item.name}</span>
-      <span class="cart-item-qty">x${item.qty}</span>
-      <button class="cart-item-remove" data-id="${item.id}">&times;</button>
+      <img src="${item.image || 'assets/placeholder.png'}" alt="${item.name}" class="cart-item-img" />
+      <div class="cart-item-info">
+        <span class="cart-item-name">${item.name}</span>
+        <span class="cart-item-details">
+          <span class="cart-item-qty-badge">${item.qty}</span>
+          <span class="cart-item-price">₹${(item.price * item.qty).toLocaleString()}</span>
+        </span>
+      </div>
+      <button class="cart-item-remove" data-id="${cartKey}">Delete</button>
     `;
     cartItemsList.appendChild(li);
   });
@@ -81,6 +97,50 @@ if (cartCheckoutBtn) cartCheckoutBtn.addEventListener('click', () => {
 });
 updateCartBadge();
 
+// --- Enhanced Search Feature ---
+const searchInput = document.getElementById('mainSearchInput');
+const searchDropdown = document.getElementById('searchDropdown');
+let lastSearchResults = [];
+
+function showSearchDropdown(results) {
+  if (!searchDropdown) return;
+  if (!results.length) {
+    searchDropdown.style.display = 'none';
+    searchDropdown.innerHTML = '';
+    return;
+  }
+  searchDropdown.innerHTML = results.map(prod => `<div class="search-result" data-id="${prod.id}">${prod.title}</div>`).join('');
+  searchDropdown.style.display = 'block';
+}
+
+if (searchInput && searchDropdown) {
+  searchInput.addEventListener('input', (e) => {
+    const val = e.target.value.trim().toLowerCase();
+    if (!val || !window._allProducts) {
+      showSearchDropdown([]);
+      return;
+    }
+    lastSearchResults = window._allProducts.filter(p => p.title.toLowerCase().startsWith(val));
+    showSearchDropdown(lastSearchResults.slice(0, 8));
+  });
+  searchInput.addEventListener('blur', () => {
+    setTimeout(() => { searchDropdown.style.display = 'none'; }, 150);
+  });
+  searchDropdown.addEventListener('mousedown', (e) => {
+    if (e.target.classList.contains('search-result')) {
+      const id = e.target.getAttribute('data-id');
+      const card = document.querySelector(`.product-card .product-btn[data-id="${id}"]`);
+      if (card) {
+        card.closest('.product-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        card.closest('.product-card').classList.add('search-highlight');
+        setTimeout(() => card.closest('.product-card').classList.remove('search-highlight'), 1600);
+      }
+      searchDropdown.style.display = 'none';
+      searchInput.value = e.target.textContent;
+    }
+  });
+}
+
 // --- Dynamic Product Grid ---
 async function loadProducts() {
     const grid = document.getElementById('productsGrid');
@@ -102,10 +162,10 @@ async function loadProducts() {
                 <p class="product-price">₹${Math.round(product.price * 85).toLocaleString()}</p>
                 <button class="product-btn" data-id="${product.id}">Add to Cart</button>
             `;
-            // Open detail modal on card click (not on Add to Cart)
+            // Navigate to product.html on card click (not Add to Cart)
             card.addEventListener('click', e => {
               if (e.target.classList.contains('product-btn')) return;
-              openProductModal(product);
+              window.location.href = `product.html?id=${product.id}`;
             });
             grid.appendChild(card);
         });
@@ -115,12 +175,14 @@ async function loadProducts() {
                 e.stopPropagation();
                 const id = btn.getAttribute('data-id');
                 const product = products.find(p => p.id == id);
-                // Map API fields to cart fields
+                const cardProduct = btn.closest('.product-card');
+                const cardProductImage = cardProduct.querySelector('.product-image').src;
                 const cartItem = {
                   id: product.id,
                   name: product.title,
                   price: Math.round(product.price * 85),
-                  qty: 1
+                  qty: 1,
+                  image: cardProductImage
                 };
                 if (cart[id]) {
                   cart[id].qty += 1;
@@ -130,6 +192,16 @@ async function loadProducts() {
                 localStorage.setItem('cart', JSON.stringify(cart));
                 updateCartBadge();
                 renderCart();
+                // Show confirmation popup
+                const popup = document.getElementById('cartConfirmPopup');
+                if (popup) {
+                  popup.style.display = 'flex';
+                  popup.classList.add('active');
+                  setTimeout(() => {
+                    popup.classList.remove('active');
+                    setTimeout(() => { popup.style.display = 'none'; }, 230);
+                  }, 1200);
+                }
             });
         });
 
@@ -184,20 +256,23 @@ if (productModalOverlay) productModalOverlay.addEventListener('click', closeProd
 if (productModalClose) productModalClose.addEventListener('click', closeProductModal);
 if (modalAddCartBtn) modalAddCartBtn.addEventListener('click', () => {
   if (!window._allProducts || !modalProductId) return;
-  const product = window._allProducts.find(p => p.id == modalProductId);
+  let product = window._allProducts.find(p => p.id == modalProductId);
   if (!product) return;
+  // Defensive: ensure image is present
+  if (!product.image) {
+    const found = window._allProducts.find(p => p.id == product.id);
+    if (found && found.image) product.image = found.image;
+  }
+  console.log('Add to cart product:', product);
   const id = product.id;
   const cartItem = {
     id: product.id,
     name: product.title,
     price: Math.round(product.price * 85),
-    qty: 1
+    qty: cart[id] ? cart[id].qty + 1 : 1,
+    image: product.image
   };
-  if (cart[id]) {
-    cart[id].qty += 1;
-  } else {
-    cart[id] = cartItem;
-  }
+  cart[id] = cartItem;
   localStorage.setItem('cart', JSON.stringify(cart));
   updateCartBadge();
   renderCart();

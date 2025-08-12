@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details</title>
+  <link rel="stylesheet" href="styles/main.css">
+  <style>
+    .detail-container { max-width: 900px; margin: 48px auto; background: #fff; border-radius: 18px; box-shadow: 0 6px 32px rgba(0,0,0,0.07); display: flex; flex-wrap: wrap; gap: 36px; padding: 32px; }
+    .detail-image { flex: 1 1 300px; display: flex; align-items: center; justify-content: center; }
+    .detail-image img { max-width: 320px; max-height: 340px; border-radius: 14px; background: #f4f6fb; box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
+    .detail-info { flex: 2 1 340px; display: flex; flex-direction: column; gap: 14px; }
+    .detail-title { font-size: 2rem; font-weight: 700; margin-bottom: 8px; }
+    .detail-rating { color: #ffc107; font-size: 1.3rem; margin-bottom: 6px; }
+    .detail-desc { font-size: 1.1rem; color: #555; margin-bottom: 16px; }
+    .detail-price { font-size: 1.5rem; color: #007bff; font-weight: 700; margin-bottom: 16px; }
+    .detail-add-cart-btn { background: #007bff; color: #fff; border: none; border-radius: 24px; padding: 14px 38px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: background 0.18s; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .detail-add-cart-btn:hover { background: #0056b3; }
+    @media (max-width: 700px) { .detail-container { flex-direction: column; gap: 20px; padding: 12px; } .detail-image img { max-width: 90vw; } }
+  </style>
+</head>
+<body>
+  <header class="main-header frosted">
+    <div class="container header-flex">
+      <a href="index.html" class="logo" aria-label="Brand Home">
+        <img src="assets/logo.png" alt="Brand Logo" />
+      </a>
+      <nav class="nav-menu" aria-label="Main Navigation">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="product.html" class="active">Product</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+      </nav>
+      <form class="search-bar" role="search">
+        <input type="text" placeholder="Search products..." aria-label="Search products" />
+        <button type="submit" aria-label="Search"><i class="fas fa-search"></i></button>
+      </form>
+      <div class="cart-section">
+        <button class="cart-icon" aria-label="Shopping Cart">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="cart-badge" id="cartBadge">0</span>
+        </button>
+      </div>
+      <button class="hamburger" aria-label="Open menu" tabindex="0">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+  <nav class="mobile-nav" id="mobileNav" aria-label="Mobile Navigation">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="#" class="active">Product</a></li>
+    </ul>
+  </nav>
+  <main>
+    <div id="detailLoading" class="products-loading" style="margin-top:48px;">Loading product...</div>
+    <div id="detailError" class="products-error" style="display:none;"></div>
+    <div class="detail-container" id="detailContainer" style="display:none;">
+      <div class="detail-image"><img id="detailImage" src="" alt="" /></div>
+      <div class="detail-info">
+        <div class="detail-title" id="detailTitle"></div>
+        <div class="detail-rating" id="detailRating"></div>
+        <div class="detail-price" id="detailPrice"></div>
+        <div class="detail-desc" id="detailDesc"></div>
+        <button class="detail-add-cart-btn" id="detailAddCartBtn">Add to Cart</button>
+      </div>
+    </div>
+    <section id="relatedSection" style="margin:48px auto 24px auto;max-width:900px;display:none;">
+      <h3 style="margin-bottom:18px;font-size:1.25rem;">Related Products</h3>
+      <div id="relatedProducts" style="display:flex;gap:20px;flex-wrap:wrap;"></div>
+    </section>
+    <!-- Image Zoom Modal -->
+    <div id="zoomModal" class="zoom-modal">
+      <div class="zoom-modal-overlay" id="zoomModalOverlay"></div>
+      <img id="zoomModalImg" class="zoom-modal-img" src="" alt="Zoomed Product Image" />
+      <button class="zoom-modal-close" id="zoomModalClose" aria-label="Close">&times;</button>
+    </div>
+    <!-- Breadcrumbs -->
+    <nav class="breadcrumbs" id="breadcrumbs" style="margin:24px 0 18px 0;font-size:0.97rem;text-align:left;max-width:900px;margin-left:auto;margin-right:auto;"></nav>
+
+    <!-- Product Variations and Carousel -->
+    <div class="detail-container" id="detailContainer" style="display:none;">
+      <div class="detail-image">
+        <div class="carousel" id="imageCarousel">
+          <img id="detailImage" src="" alt="" />
+          <div class="carousel-thumbnails" id="carouselThumbnails"></div>
+        </div>
+      </div>
+      <div class="detail-info">
+        <div class="detail-title" id="detailTitle"></div>
+        <div class="detail-rating" id="detailRating"></div>
+        <div class="detail-price" id="detailPrice"></div>
+        <div class="detail-desc" id="detailDesc"></div>
+        <div class="variation-row">
+          <label for="selectSize">Size:</label>
+          <select id="selectSize">
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
+          </select>
+          <label for="selectColor" style="margin-left:18px;">Color:</label>
+          <select id="selectColor">
+            <option value="Red">Red</option>
+            <option value="Blue">Blue</option>
+            <option value="Black">Black</option>
+            <option value="White">White</option>
+          </select>
+        </div>
+        <div class="quantity-row">
+          <label for="quantityInput">Quantity:</label>
+          <button type="button" class="qty-btn" id="qtyMinus">−</button>
+          <input type="number" id="quantityInput" min="1" max="10" value="1" />
+          <button type="button" class="qty-btn" id="qtyPlus">+</button>
+        </div>
+        <div class="total-price-row">
+          <span>Total: </span><span id="totalPrice">₹0</span>
+        </div>
+        <button class="detail-add-cart-btn" id="detailAddCartBtn">Add to Cart</button>
+        <div id="addCartFeedback" class="add-cart-feedback"></div>
+      </div>
+    </div>
+    <section id="relatedSection" style="margin:48px auto 24px auto;max-width:900px;display:none;">
+      <h3 style="margin-bottom:18px;font-size:1.25rem;">Related Products</h3>
+      <div id="relatedProducts" style="display:flex;gap:20px;flex-wrap:wrap;"></div>
+    </section>
+    <!-- Image Zoom Modal -->
+    <div id="zoomModal" class="zoom-modal">
+      <div class="zoom-modal-overlay" id="zoomModalOverlay"></div>
+      <img id="zoomModalImg" class="zoom-modal-img" src="" alt="Zoomed Product Image" />
+      <button class="zoom-modal-close" id="zoomModalClose" aria-label="Close">&times;</button>
+    </div>
+    <footer class="footer">
+      <div>&copy; 2025 My Ecommerce Store. All rights reserved.</div>
+      <div class="social-icons">
+        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+      </div>
+    </footer>
+
+    <!-- Cart Modal Markup (copied from index.html) -->
+    <div class="cart-modal-overlay" id="cartModalOverlay"></div>
+    <div class="cart-modal" id="cartModal">
+      <div class="cart-modal-header">
+        <h3>Shopping Cart</h3>
+        <button class="cart-modal-close" id="cartModalClose" aria-label="Close">&times;</button>
+      </div>
+      <div class="cart-modal-body" id="cartModalBody">
+        <div class="cart-empty">Your cart is empty.</div>
+        <ul class="cart-items-list" id="cartItemsList"></ul>
+        <div class="cart-total-row" id="cartTotalRow">
+          <span>Total:</span>
+          <span class="cart-total" id="cartTotal">₹0</span>
+        </div>
+        <button class="cart-checkout-btn" id="cartCheckoutBtn">Checkout</button>
+      </div>
+    </div>
+    <div id="cartConfirmPopup" class="cart-confirm-popup" style="display:none" role="alert" aria-live="assertive">
+      <i class="fas fa-check-circle"></i>
+      <span id="cartConfirmMsg">Added to cart!</span>
+    </div>
+  <script src="scripts/product-detail.js"></script>
+</body>
+</html>

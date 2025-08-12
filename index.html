@@ -1,56 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Commerce Frontend</title>
-    <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-Commerce Frontend</title>
+  <link rel="stylesheet" href="styles/main.css">
 </head>
 <body>
-    <header class="main-header">
-        <div class="logo">
-            <img src="assets/logo.png" alt="Brand Logo" />
-        </div>
-        <nav class="nav-menu">
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Products</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>
-        </nav>
-        <form class="search-bar">
-            <input type="text" placeholder="Search products..." aria-label="Search products" />
-            <button type="submit">🔍</button>
-        </form>
-        <div class="cart-section">
-            <a href="#" class="cart-icon" aria-label="Shopping Cart">
-                🛒
-                <span class="cart-badge">0</span>
-            </a>
-        </div>
-        <button class="hamburger" aria-label="Open menu">
-            <span></span>
-            <span></span>
-            <span></span>
+  <header class="main-header frosted">
+    <div class="container header-flex">
+      <a href="index.html" class="logo" aria-label="Brand Home">
+        <img src="assets/logo.png" alt="Brand Logo" />
+      </a>
+      <nav class="nav-menu" aria-label="Main Navigation">
+        <ul>
+          <li><a href="index.html" class="active">Home</a></li>
+          <li><a href="product.html">Product</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+      </nav>
+      <form class="search-bar" role="search">
+        <input type="text" placeholder="Search products..." aria-label="Search products" />
+        <button type="submit" aria-label="Search"><i class="fas fa-search"></i></button>
+      </form>
+      <div class="cart-section">
+        <button class="cart-icon" aria-label="Shopping Cart">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="cart-badge">0</span>
         </button>
-    </header>
-    <section class="hero-section">
-      <div class="hero-content">
-        <h1 class="hero-title">Biggest Sale of the Year!</h1>
-        <p class="hero-subtitle">Up to 70% off on selected products. Shop the latest arrivals and exclusive deals now.</p>
-        <a href="#" class="hero-cta">Shop Now</a>
       </div>
-    </section>
+      <button class="hamburger" aria-label="Open menu" tabindex="0">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+  <nav class="mobile-nav" id="mobileNav" aria-label="Mobile Navigation">
+    <ul>
+      <li><a href="#" class="active">Home</a></li>
+      <li><a href="#products">Products</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+  </nav>
+  <section class="hero-section modern-hero">
+    <div class="hero-bg"></div>
+    <div class="container hero-content">
+      <h1 class="hero-title">Discover the New Season</h1>
+      <p class="hero-subtitle">Shop trending styles and exclusive deals. Refresh your look with the best in fashion, tech, and more.</p>
+      <a href="#products" class="hero-cta">Shop Now <i class="fas fa-arrow-right"></i></a>
+    </div>
+  </section>
+  <main>
     <section class="products-section" id="products">
-      <h2 class="products-title">Featured Products</h2>
-      <div class="products-grid" id="productsGrid">
-        <div class="products-loading" id="productsLoading">
-          <svg class="spinner" width="32" height="32" viewBox="0 0 50 50"><circle class="path" cx="25" cy="25" r="20" fill="none" stroke="#007bff" stroke-width="5"></circle></svg>
-          <span>Loading products...</span>
+      <div class="container">
+        <h2 class="products-title">Featured Products</h2>
+        <div class="products-grid" id="productsGrid">
+          <div class="products-loading" id="productsLoading">
+            <svg class="spinner" width="32" height="32" viewBox="0 0 50 50"><circle class="path" cx="25" cy="25" r="20" fill="none" stroke="#007bff" stroke-width="5"></circle></svg>
+            <span>Loading products...</span>
+          </div>
         </div>
       </div>
     </section>
+
+
     <div class="cart-modal-overlay" id="cartModalOverlay"></div>
     <div class="cart-modal" id="cartModal">
       <div class="cart-modal-header">
@@ -84,5 +97,9 @@
       </div>
     </div>
     <script src="scripts/app.js"></script>
+  <div id="cartConfirmPopup" class="cart-confirm-popup" style="display:none" role="alert" aria-live="assertive">
+    <i class="fas fa-check-circle"></i>
+    <span id="cartConfirmMsg">Added to cart!</span>
+  </div>
 </body>
 </html>

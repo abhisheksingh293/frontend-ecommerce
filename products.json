@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "name": "Smart Headphones",
+    "price": 2999,
+    "image": "assets/product1.jpg"
+  },
+  {
+    "id": 2,
+    "name": "Wireless Speaker",
+    "price": 1499,
+    "image": "assets/product2.jpg"
+  },
+  {
+    "id": 3,
+    "name": "Fitness Tracker",
+    "price": 999,
+    "image": "assets/product3.jpg"
+  },
+  {
+    "id": 4,
+    "name": "Bluetooth Earbuds",
+    "price": 1299,
+    "image": "assets/product4.jpg"
+  },
+  {
+    "id": 5,
+    "name": "Smart Watch",
+    "price": 3999,
+    "image": "assets/product5.jpg"
+  },
+  {
+    "id": 6,
+    "name": "Portable Charger",
+    "price": 799,
+    "image": "assets/product6.jpg"
+  }
+]

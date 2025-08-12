@@ -44,27 +44,45 @@
     </section>
     <section class="products-section" id="products">
       <h2 class="products-title">Featured Products</h2>
-      <div class="products-grid">
-        <div class="product-card">
-          <img src="assets/product1.jpg" alt="Product 1" class="product-image" />
-          <h3 class="product-name">Smart Headphones</h3>
-          <p class="product-price">₹2,999</p>
-          <button class="product-btn">Add to Cart</button>
-        </div>
-        <div class="product-card">
-          <img src="assets/product2.jpg" alt="Product 2" class="product-image" />
-          <h3 class="product-name">Wireless Speaker</h3>
-          <p class="product-price">₹1,499</p>
-          <button class="product-btn">Add to Cart</button>
-        </div>
-        <div class="product-card">
-          <img src="assets/product3.jpg" alt="Product 3" class="product-image" />
-          <h3 class="product-name">Fitness Tracker</h3>
-          <p class="product-price">₹999</p>
-          <button class="product-btn">Add to Cart</button>
+      <div class="products-grid" id="productsGrid">
+        <div class="products-loading" id="productsLoading">
+          <svg class="spinner" width="32" height="32" viewBox="0 0 50 50"><circle class="path" cx="25" cy="25" r="20" fill="none" stroke="#007bff" stroke-width="5"></circle></svg>
+          <span>Loading products...</span>
         </div>
       </div>
     </section>
+    <div class="cart-modal-overlay" id="cartModalOverlay"></div>
+    <div class="cart-modal" id="cartModal">
+      <div class="cart-modal-header">
+        <h3>Your Cart</h3>
+        <button class="cart-modal-close" id="cartModalClose" aria-label="Close Cart">&times;</button>
+      </div>
+      <div class="cart-modal-body" id="cartModalBody">
+        <div class="cart-empty">Your cart is empty.</div>
+        <ul class="cart-items-list" id="cartItemsList"></ul>
+        <div class="cart-total-row" id="cartTotalRow">
+          <span>Total:</span>
+          <span class="cart-total" id="cartTotal">₹0</span>
+        </div>
+        <button class="cart-checkout-btn" id="cartCheckoutBtn">Checkout</button>
+      </div>
+    </div>
+    <div class="product-modal-overlay" id="productModalOverlay"></div>
+    <div class="product-modal" id="productModal">
+      <div class="product-modal-header">
+        <h3 id="modalProductTitle"></h3>
+        <button class="product-modal-close" id="productModalClose" aria-label="Close">&times;</button>
+      </div>
+      <div class="product-modal-body">
+        <img id="modalProductImage" class="modal-product-image" src="" alt="" />
+        <div class="modal-product-rating" id="modalProductRating"></div>
+        <p class="modal-product-desc" id="modalProductDesc"></p>
+        <div class="modal-product-price-row">
+          <span class="modal-product-price" id="modalProductPrice"></span>
+          <button class="modal-add-cart-btn" id="modalAddCartBtn">Add to Cart</button>
+        </div>
+      </div>
+    </div>
     <script src="scripts/app.js"></script>
 </body>
 </html>
